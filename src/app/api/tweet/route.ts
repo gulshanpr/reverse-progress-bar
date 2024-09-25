@@ -1,25 +1,55 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { twitterClient } from "@/lib/twitterClient";
+import generateProgressBarImage from "@/lib/generateImg";
 
-export async function POST(request: Request) {
+async function uploadImageToTwitter(imageBuffer: Buffer) {
   try {
-    const { tweet } = await request.json();
+    const mediaId = await twitterClient.v1.uploadMedia(imageBuffer, {
+      type: "png",
+    });
+    return mediaId;
+  } catch (error) {
+    console.error("Error uploading media to Twitter:", error);
+    throw error;
+  }
+}
+
+export async function POST(request: NextRequest) {
+  try {
+    const nowUTC: Date = new Date();
+    const istOffset = 5.5 * 60 * 60 * 1000;
+    const nowIST: Date = new Date(nowUTC.getTime() + istOffset);
+
+    const startOfYearIST: Date = new Date(nowIST.getFullYear(), 0, 0);
+    const diff: number = nowIST.getTime() - startOfYearIST.getTime();
+    const oneDay: number = 1000 * 60 * 60 * 24;
+    const dayOfYear: number = Math.floor(diff / oneDay);
+    const daysLeft: number = 365 - dayOfYear;
+    const percentage = ((daysLeft / 365) * 100).toFixed(1);
+    console.log(daysLeft);
+
+    const tweetText = `GM,\n${daysLeft} days left — that\'s ${percentage}% of 2024. Let\'s keep going till we all WAGMI! 🚀\n @gulshanprr`;
+
+    const imgBuffer = generateProgressBarImage(daysLeft);
 
     if (!twitterClient) {
-      throw new Error("twitter client is not initialised");
+      throw new Error("Twitter client is not initialized");
     }
 
-    const postOnTwitter = await twitterClient.v2.tweet(tweet);
+    const mediaId = await uploadImageToTwitter(imgBuffer);
+    console.log(mediaId);
+
+    const postOnTwitter = await twitterClient.v2.tweet({
+      text: tweetText,
+      media: { media_ids: [mediaId] },
+    });
 
     return NextResponse.json(
-      { success: true, data: "Successfully made the tweet" },
+      { success: true, tweet: postOnTwitter },
       { status: 200 }
     );
   } catch (error) {
-    console.log("Error in route.ts", error);
-    return NextResponse.json(
-      { success: false, message: "Error" },
-      { status: 500 }
-    );
+    console.error("Error in route.ts:", error);
+    return NextResponse.json({ success: false, error }, { status: 500 });
   }
 }

@@ -1,6 +1,4 @@
-const { createCanvas } = require("canvas");
-const fs = require("fs");
-const path = require("path");
+import { createCanvas } from "canvas";
 
 function generateProgressBarImage(day: any) {
   const width = 1740;
@@ -46,10 +44,10 @@ function generateProgressBarImage(day: any) {
   // ctx.font = "50px Arial";
   // ctx.fillText(`${percentage}% left of 2024` , width / 2 - 180 , barY + barHeight - 217);
 
-  const buffer = canvas.toBuffer("image/png");
-  fs.writeFileSync(path.join(__dirname, `progress-bar-day-${day}.png`), buffer);
+  // const buffer = canvas.toBuffer("image/png");
+  // fs.writeFileSync(path.join(__dirname, `progress-bar-day-${day}.png`), buffer);
 
-  return buffer;
+  return canvas.toBuffer("image/png");
 }
 
-generateProgressBarImage(365 - 268);
+export default generateProgressBarImage;
