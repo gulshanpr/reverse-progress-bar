@@ -14,7 +14,7 @@ async function uploadImageToTwitter(imageBuffer: Buffer) {
   }
 }
 
-export async function POST(request: NextRequest) {
+export async function GET(request: NextRequest) {
   try {
     const nowUTC: Date = new Date();
     const istOffset = 5.5 * 60 * 60 * 1000;
