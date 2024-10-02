@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic'; 
+
 import { NextRequest, NextResponse } from "next/server";
 import { twitterClient } from "@/lib/twitterClient";
 import generateProgressBarImage from "@/lib/generateImg";
