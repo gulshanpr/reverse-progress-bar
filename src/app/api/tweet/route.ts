@@ -42,12 +42,25 @@ export async function GET(request: NextRequest) {
       media: { media_ids: [mediaId] },
     });
 
+    const headers = new Headers();
+    headers.set("Cache-Control", "no-store, no-cache, must-revalidate, proxy-revalidate");
+    headers.set("Pragma", "no-cache");
+    headers.set("Expires", "0");
+    headers.set("Surrogate-Control", "no-store");
+
     return NextResponse.json(
       { success: true, tweet: postOnTwitter },
-      { status: 200 }
+      { status: 200, headers }
     );
   } catch (error) {
     console.error("Error in route.ts:", error);
-    return NextResponse.json({ success: false, error }, { status: 500 });
+
+    const headers = new Headers();
+    headers.set("Cache-Control", "no-store, no-cache, must-revalidate, proxy-revalidate");
+    headers.set("Pragma", "no-cache");
+    headers.set("Expires", "0");
+    headers.set("Surrogate-Control", "no-store");
+
+    return NextResponse.json({ success: false, error }, { status: 500, headers });
   }
 }
