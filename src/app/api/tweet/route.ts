@@ -26,7 +26,6 @@ export async function GET(request: NextRequest) {
     const dayOfYear: number = Math.floor(diff / oneDay);
     const daysLeft: number = 365 - dayOfYear;
     const percentage = ((daysLeft / 365) * 100).toFixed(1);
-    console.log(daysLeft);
 
     const tweetText = `GM,\n${daysLeft} days left — that\'s ${percentage}% of 2024. Let\'s keep going till we all WAGMI! 🚀\n @gulshanprr @lalitcap @snhpndy @JAIN_SAMYAK15`;
 
@@ -37,7 +36,6 @@ export async function GET(request: NextRequest) {
     }
 
     const mediaId = await uploadImageToTwitter(imgBuffer);
-    console.log(mediaId);
 
     const postOnTwitter = await twitterClient.v2.tweet({
       text: tweetText,
