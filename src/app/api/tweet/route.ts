@@ -29,7 +29,7 @@ export async function GET(request: NextRequest) {
     const daysLeft: number = 365 - dayOfYear;
     const percentage = ((daysLeft / 365) * 100).toFixed(1);
 
-    const tweetText = `GM,\n${daysLeft} days left — that\'s ${percentage}% of 2024. Let\'s keep going till we all WAGMI! 🚀\n @gulshanprr @lalitcap @snhpndy @JAIN_SAMYAK15`;
+    const tweetText = `GM,\n${daysLeft} days left — that\'s ${percentage}% of 2024. Let\'s keep going till we all WAGMI! 🚀`;
 
     const imgBuffer = generateProgressBarImage(daysLeft);
 
